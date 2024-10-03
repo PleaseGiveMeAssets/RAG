@@ -1,25 +1,24 @@
 from fastapi import APIRouter
 
-from app.services.embeddings import embed_data
+from app.services.embeddings import embedding_data
 from app.services.loaders import loader_data
 from app.services.retrievers import retriever_data
 from app.services.splitters import splitter_data
-from app.services.vectorstores import vectorstore_data
+from app.services.vectorstores import vectorstore
 
 router = APIRouter()
 
 
-@router.post("/save")
-async def loaders():
+@router.put("/dailytrendstore")
+async def saveDailyTrendInfo():
     loader = loader_data()
     splitter = splitter_data(loader)
-    embedding = embed_data()
-    vectorstore = vectorstore_data(splitter, embedding)
-    return {"vectorstore": vectorstore}
+    embedding = embedding_data()
+    vectorstore(splitter, embedding)
 
 
-@router.get("/get/{query}")
-async def retrievers(query: str):
-    embedding = embed_data()
-    retriever = retriever_data(query, embedding)
+@router.get("/dailyreportsearch/{question}")
+async def getDailyReportInfo(question: str):
+    embedding = embedding_data()
+    retriever = retriever_data(question, embedding)
     return {"retriever": retriever}
